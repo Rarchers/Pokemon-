@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Pokedex</string>
+    <string name="title_activity_poke_detail">My Compose App</string>
+    <string name="title_activity_poke_dex">My Compose App</string>
+</resources>
