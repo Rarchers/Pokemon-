@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollableColumn
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -16,13 +18,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.setContent
+
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.viewModel
+import androidx.lifecycle.ViewModelProvider
+
 import com.rarcher.pokedex.pokeDetail.activity.PokeDetail
 import com.rarcher.pokedex.pokeDetail.activity.pokeLabel
 import com.rarcher.pokedex.pokeDetail.model.Pokemon
@@ -31,12 +35,13 @@ import com.rarcher.pokedex.pokeDex.activity.ui.theme.PokedexTheme
 import com.rarcher.pokedex.viewModel.AmbientViewModel
 
 class PokeDex : AppCompatActivity() {
+    @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             PokedexTheme {
                 window.statusBarColor = 0x04000000
-                val ambientViewModel: AmbientViewModel = viewModel()
+                val ambientViewModel: AmbientViewModel = ViewModelProvider(this).get(AmbientViewModel::class.java)
                 list(this, ambientViewModel)
 
             }
@@ -44,6 +49,7 @@ class PokeDex : AppCompatActivity() {
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 fun list(context: Context, viewModel: AmbientViewModel) {
     val list = pokemons
@@ -56,11 +62,18 @@ fun list(context: Context, viewModel: AmbientViewModel) {
 
     }*/
     
-    ScrollableColumn() {
+    LazyVerticalGrid(cells = GridCells.Fixed(2), content = {
+        items(list){pokemon->
+            ItemCard(pokemon = pokemon, context = context, viewModel = viewModel)
+        }
+    })
+    
+    
+   /* ScrollableColumn() {
         list.forEach {
             ItemCard(pokemon = it, context = context, viewModel = viewModel)
         }
-    }
+    }*/
 }
 
 @Composable
@@ -102,10 +115,11 @@ fun ItemCard(pokemon: Pokemon, context: Context, viewModel: AmbientViewModel) {
                 }
             }
 
-            pokemon.image?.let { imageResource(id = it) }
+            pokemon.image?.let { painterResource(id = it) }
                 ?.let {
                     Image(
-                        bitmap = it,
+                        painter = it,
+                        contentDescription = pokemon.name,
                         modifier = Modifier
                             .size(72.dp)
                             .align(Alignment.BottomEnd)

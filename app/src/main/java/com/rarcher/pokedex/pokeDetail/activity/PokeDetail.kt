@@ -1,9 +1,9 @@
 package com.rarcher.pokedex.pokeDetail.activity
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.Text
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.shape.ZeroCornerSize
@@ -16,13 +16,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.viewModel
 import com.rarcher.pokedex.pokeDetail.activity.ui.theme.PokedexTheme
 import com.rarcher.pokedex.pokeDetail.model.Pokemon
 import com.rarcher.pokedex.pokeDetail.model.Sections
@@ -131,8 +130,12 @@ fun BackGround(pokemon: Pokemon) {
 
 @Composable
 fun BoxScope.PokemonImage(pokemon: Pokemon) {
-    pokemon.image?.let { imageResource(id = it) }?.let {
-        Image(bitmap = it, modifier = Modifier
+    pokemon.image?.let { painterResource(id = it) }?.let {
+      /*  Image(bitmap = it, modifier = Modifier
+            .align(Alignment.TopCenter)
+            .padding(top = 140.dp)
+            .size(200.dp))*/
+        Image(painter = it, contentDescription = pokemon.name, modifier = Modifier
             .align(Alignment.TopCenter)
             .padding(top = 140.dp)
             .size(200.dp))
@@ -148,7 +151,7 @@ fun BoxScope.CardContent(pokemon: Pokemon) {
         .fillMaxSize()
         .align(Alignment.TopCenter)
         .padding(top = 300.dp),
-        shape = RoundedCornerShape(32.dp).copy(bottomLeft = ZeroCornerSize, bottomRight = ZeroCornerSize),
+        shape = RoundedCornerShape(32.dp).copy(bottomStart = ZeroCornerSize, bottomEnd = ZeroCornerSize),
         color = Color.White) {
         Column() {
             Spacer(modifier = Modifier.padding(top = 33.dp))
